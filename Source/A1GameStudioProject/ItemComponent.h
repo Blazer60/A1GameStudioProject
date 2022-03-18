@@ -38,5 +38,6 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	EStack Stack { EStack::Linear };
 
-	uint32_t CallBackToken { 0 };
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int CallBackToken { 0 };
 };
