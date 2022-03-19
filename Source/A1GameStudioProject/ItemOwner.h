@@ -6,6 +6,7 @@
 #include "Components/ActorComponent.h"
 #include "ItemOwner.generated.h"
 
+class UItemComponent;
 
 UCLASS(ClassGroup=(Item), meta=(BlueprintSpawnableComponent))
 class A1GAMESTUDIOPROJECT_API UItemOwner
@@ -14,6 +15,9 @@ class A1GAMESTUDIOPROJECT_API UItemOwner
 	GENERATED_BODY()
 public:
 	UItemOwner();
+
+	// UFUNCTION(BlueprintCallable)
+	UItemComponent *AddItem(TSubclassOf<UItemComponent> ItemClass); // todo: Make this actually add a rock.
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float Health { 100.f };
@@ -44,5 +48,10 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int Level { 0 };
-	
+
+	// UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	// TArray<UItemComponent *> Items;
+
+	// UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	// UItemComponent *ItemPtr;
 };
