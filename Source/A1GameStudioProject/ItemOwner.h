@@ -2,10 +2,13 @@
 
 #pragma once
 
+#include "Common.h"
+
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include "ItemOwner.generated.h"
 
+class UHitCallback;
 class UItemComponent;
 
 UCLASS(ClassGroup=(Item), meta=(BlueprintSpawnableComponent))
@@ -49,9 +52,20 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int Level { 0 };
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TEnumAsByte<EOwnerType> Type { None };
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UHitCallback* HitCallback { nullptr };
+
+	void OnHit(UItemOwner *Target, float ProcRate, float Damage, FVector HitLocation) const;
+
+	virtual void BeginPlay() override;
 	// UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	// TArray<UItemComponent *> Items;
 
 	// UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	// UItemComponent *ItemPtr;
+protected:
+	void Warn(const FString &Item) const;
 };

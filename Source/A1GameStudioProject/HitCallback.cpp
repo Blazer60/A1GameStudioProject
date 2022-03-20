@@ -9,14 +9,17 @@ UHitCallback::UHitCallback()
 	PrimaryComponentTick.bCanEverTick = false;
 }
 
-void UHitCallback::Broadcast()
+void UHitCallback::Broadcast(UItemOwner* Target, const float ProcRate, const float Damage, const FVector HitLocation)
 {
-	Broadcast_Impl();
+	Broadcast_Impl(Target, ProcRate, Damage, HitLocation);
 }
 
 int UHitCallback::Subscribe(const FOnHitSignature& Callback)
 {
-	const auto Lambda = [=](){ Callback.ExecuteIfBound(); };
+	const auto Lambda = [=](UItemOwner* Target, const float ProcRate, const float Damage, const FVector HitLocation)
+	{
+		Callback.ExecuteIfBound(Target, ProcRate, Damage, HitLocation);
+	};
 	return Subscribe_Impl(std::move(Lambda));
 }
 

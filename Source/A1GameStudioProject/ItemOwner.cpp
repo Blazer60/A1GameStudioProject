@@ -2,6 +2,8 @@
 
 
 #include "ItemOwner.h"
+
+#include "HitCallback.h"
 #include "ItemComponent.h"
 
 
@@ -22,5 +24,27 @@ UItemComponent* UItemOwner::AddItem(TSubclassOf<UItemComponent> ItemClass)
 	
 	// GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, "Failed to get Owner");
 	return nullptr;
+}
+
+void UItemOwner::OnHit(UItemOwner *Target, const float ProcRate, const float Damage, const FVector HitLocation) const
+{
+	if (HitCallback)
+		HitCallback->Broadcast(Target, ProcRate, Damage, HitLocation);
+}
+
+void UItemOwner::BeginPlay()
+{
+	Super::BeginPlay();
+	auto *Owner = GetOwner();
+	HitCallback = Owner->FindComponentByClass<UHitCallback>();
+	if (!HitCallback)
+		Warn("Hit Callback");
+}
+
+void UItemOwner::Warn(const FString &Item) const
+{
+	const auto ActorName = GetOwner()->GetName();
+	const FString Out = Item + " has not been added to " + ActorName;
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, Out);
 }
 
