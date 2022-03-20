@@ -9,6 +9,7 @@
 #include "ItemOwner.generated.h"
 
 class UHitCallback;
+class UHurtCallback;
 class UItemComponent;
 
 UCLASS(ClassGroup=(Item), meta=(BlueprintSpawnableComponent))
@@ -58,7 +59,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UHitCallback* HitCallback { nullptr };
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UHurtCallback* HurtCallback { nullptr };
+
 	void OnHit(UItemOwner *Target, float ProcRate, float Damage, FVector HitLocation) const;
+	void OnHurt(UItemOwner *By, float Damage) const;
 
 	virtual void BeginPlay() override;
 	// UPROPERTY(EditAnywhere, BlueprintReadWrite)

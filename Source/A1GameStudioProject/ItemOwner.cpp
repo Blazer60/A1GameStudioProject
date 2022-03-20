@@ -3,7 +3,8 @@
 
 #include "ItemOwner.h"
 
-#include "HitCallback.h"
+#include "Callbacks/HitCallback.h"
+#include "Callbacks/HurtCallback.h"
 #include "ItemComponent.h"
 
 
@@ -32,13 +33,23 @@ void UItemOwner::OnHit(UItemOwner *Target, const float ProcRate, const float Dam
 		HitCallback->Broadcast(Target, ProcRate, Damage, HitLocation);
 }
 
+void UItemOwner::OnHurt(UItemOwner* By, float Damage) const
+{
+	
+}
+
 void UItemOwner::BeginPlay()
 {
 	Super::BeginPlay();
 	auto *Owner = GetOwner();
-	HitCallback = Owner->FindComponentByClass<UHitCallback>();
+	HitCallback  = Owner->FindComponentByClass<UHitCallback>();
+	HurtCallback = Owner->FindComponentByClass<UHurtCallback>();
 	if (!HitCallback)
 		Warn("Hit Callback");
+	if (!HurtCallback)
+	{
+		Warn("Hurt Callback");
+	}
 }
 
 void UItemOwner::Warn(const FString &Item) const

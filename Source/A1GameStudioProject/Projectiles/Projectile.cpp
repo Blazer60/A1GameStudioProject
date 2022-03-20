@@ -44,13 +44,14 @@ void AProjectile::OnHitDelegate(
 	}
 
 	auto *OtherOwner = OtherActor->FindComponentByClass<UItemOwner>();
-	if (!OtherOwner || OwnerType == None || OtherOwner->Type == OwnerType)
+	if (!OtherOwner || OwnerType == None)
 		return;
 
-	// Call Owner to say OnHit was successful.
-	ItemOwner->OnHit(OtherOwner, ProcRate, Damage, Hit.Location);
+	if (OtherOwner->Type != OwnerType)
+		ItemOwner->OnHit(OtherOwner, ProcRate, Damage, Hit.Location);
 
-	// Call Target to say OnHurt was successful.
+	// Always hurt things if they are not set to type None.
+	OtherOwner->OnHurt(ItemOwner, Damage);
 }
 
 
