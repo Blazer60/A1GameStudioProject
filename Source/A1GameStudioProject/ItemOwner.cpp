@@ -15,16 +15,16 @@ UItemOwner::UItemOwner()
 
 UItemComponent* UItemOwner::AddItem(TSubclassOf<UItemComponent> ItemClass)
 {
-	// auto *ItemPtr = NewObject<UItemComponent>(ItemClass);
-	// Items.Emplace(ItemPtr);
-	// GetOwner()->AddOwnedComponent(ItemPtr);
-	// GetOwner()->CreateDefaultSubobject<UItemComponent, ItemClass>(FName("Item"));
-	// GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, "Successfully Created Item");
-	// return ItemPtr;
+	auto *const Actor = GetOwner();
+	auto *const Item = NewObject<UItemComponent>(Actor, ItemClass);
+
+	if (Item)
+	{
+		Actor->AddOwnedComponent(Item);
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, "Successfully Created Item");
+	}
 	
-	
-	// GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, "Failed to get Owner");
-	return nullptr;
+	return Item;
 }
 
 void UItemOwner::OnHit(UItemOwner *Target, const float ProcRate, const float Damage, const FVector HitLocation) const

@@ -20,8 +20,8 @@ class A1GAMESTUDIOPROJECT_API UItemOwner
 public:
 	UItemOwner();
 
-	// UFUNCTION(BlueprintCallable)
-	UItemComponent *AddItem(TSubclassOf<UItemComponent> ItemClass); // todo: Make this actually add a rock.
+	UFUNCTION(BlueprintCallable)
+	UItemComponent *AddItem(TSubclassOf<UItemComponent> ItemClass);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float Health { 100.f };

@@ -2,25 +2,44 @@
 
 
 #include "Projectile.h"
+#include "A1GameStudioProject/ItemOwner.h"
 
 
-// Sets default values
 AProjectile::AProjectile()
 {
-	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
+	SphereComponent = CreateDefaultSubobject<USphereComponent>("Sphere Collision");
+
+	// The projectile movement component needs a collision object at root. So we force it here.
+	RootComponent = SphereComponent;
+	SphereComponent->OnComponentBeginOverlap.AddDynamic(this, &AProjectile::OnOverlapDelegate);
 }
 
-// Called when the game starts or when spawned
-void AProjectile::BeginPlay()
+void AProjectile::SetupProjectile(AActor* NewActorOwner, UItemOwner* ItemOwnerComponent)
 {
-	Super::BeginPlay();
-	
+	this->ActorOwner = NewActorOwner;
+    this->ItemOwner = ItemOwnerComponent;
+    this->OwnerType = ItemOwnerComponent->Type;
 }
 
-// Called every frame
-void AProjectile::Tick(float DeltaTime)
+void AProjectile::OnOverlapDelegate(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+                                    UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	Super::Tick(DeltaTime);
-}
+	if (!ActorOwner && !ItemOwner)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red,
+			"Hit Registered but no actor owner or item owner was registered before. Use SetupProjectile"
+			);
+		return;
+	}
 
+	auto *OtherOwner = OtherActor->FindComponentByClass<UItemOwner>();
+	if (!OtherOwner || OwnerType == None)
+		return;
+
+	// Always hurt things if they are not set to type None.
+    	OtherOwner->OnHurt(ItemOwner, Damage);
+
+	if (OtherOwner->Type != OwnerType)
+		ItemOwner->OnHit(OtherOwner, ProcRate, Damage, SweepResult.Location);
+}
