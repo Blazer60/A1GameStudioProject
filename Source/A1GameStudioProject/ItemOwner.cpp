@@ -21,6 +21,7 @@ UItemComponent* UItemOwner::AddItem(TSubclassOf<UItemComponent> ItemClass)
 	if (Item)
 	{
 		Actor->AddOwnedComponent(Item);
+		Item->RegisterComponent();
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, "Successfully Created Item");
 	}
 	
@@ -33,9 +34,18 @@ void UItemOwner::OnHit(UItemOwner *Target, const float ProcRate, const float Dam
 		HitCallback->Broadcast(Target, ProcRate, Damage, HitLocation);
 }
 
-void UItemOwner::OnHurt(UItemOwner* By, float Damage) const
+void UItemOwner::OnHurt(UItemOwner* By, float Damage)
 {
+	if (HurtCallback)
+		HurtCallback->Broadcast(By, Damage);
 	
+	Health -= Damage;
+	if (Health <= 0.f)
+	{
+		OnDeath(By, Damage);
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Orange, "Item Owner has died.");
+		GetOwner()->Destroy();
+	}
 }
 
 void UItemOwner::BeginPlay()
