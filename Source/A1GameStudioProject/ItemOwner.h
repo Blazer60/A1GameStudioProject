@@ -62,8 +62,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UHurtCallback* HurtCallback { nullptr };
 
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void OnDeath(UItemOwner* By, float Damage);
+	
 	void OnHit(UItemOwner *Target, float ProcRate, float Damage, FVector HitLocation) const;
-	void OnHurt(UItemOwner *By, float Damage) const;
+	void OnHurt(UItemOwner *By, float Damage);
 
 	virtual void BeginPlay() override;
 	// UPROPERTY(EditAnywhere, BlueprintReadWrite)

@@ -38,7 +38,7 @@ void AProjectile::OnOverlapDelegate(UPrimitiveComponent* OverlappedComponent, AA
 		return;
 
 	// Always hurt things if they are not set to type None.
-    	OtherOwner->OnHurt(ItemOwner, Damage);
+	OtherOwner->OnHurt(ItemOwner, Damage);
 
 	if (OtherOwner->Type != OwnerType)
 		ItemOwner->OnHit(OtherOwner, ProcRate, Damage, SweepResult.Location);
