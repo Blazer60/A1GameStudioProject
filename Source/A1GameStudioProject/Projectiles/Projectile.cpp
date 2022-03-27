@@ -12,7 +12,6 @@ AProjectile::AProjectile()
 
 	// The projectile movement component needs a collision object at root. So we force it here.
 	RootComponent = SphereComponent;
-	SphereComponent->OnComponentBeginOverlap.AddDynamic(this, &AProjectile::OnOverlapDelegate);
 }
 
 void AProjectile::SetupProjectile(AActor* NewActorOwner, UItemOwner* ItemOwnerComponent)
@@ -25,14 +24,9 @@ void AProjectile::SetupProjectile(AActor* NewActorOwner, UItemOwner* ItemOwnerCo
 void AProjectile::OnOverlapDelegate(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
                                     UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (!ActorOwner && !ItemOwner)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red,
-			"Hit Registered but no actor owner or item owner was registered before. Use SetupProjectile"
-			);
+	if (!CheckOwner())
 		return;
-	}
-
+	
 	auto *OtherOwner = OtherActor->FindComponentByClass<UItemOwner>();
 	if (!OtherOwner || OwnerType == None)
 		return;
@@ -40,6 +34,31 @@ void AProjectile::OnOverlapDelegate(UPrimitiveComponent* OverlappedComponent, AA
 	// Always hurt things if they are not set to type None.
 	OtherOwner->OnHurt(ItemOwner, Damage);
 
-	if (OtherOwner->Type != OwnerType)
+	if (OtherOwner->Type != OwnerType && ItemOwner)
 		ItemOwner->OnHit(OtherOwner, ProcRate, Damage, SweepResult.Location);
+
+	OnHit(OtherOwner, SweepResult.Location);
+}
+
+void AProjectile::BeginPlay()
+{
+	Super::BeginPlay();
+
+	// Hit Delegates must always be attached at runtime.
+	SphereComponent->OnComponentBeginOverlap.AddDynamic(this, &AProjectile::OnOverlapDelegate);
+}
+
+bool AProjectile::CheckOwner()
+{
+	if (OwnerType != EOwnerType::World)
+	{
+		if (!ActorOwner && !ItemOwner)
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red,
+				"Hit Registered but no actor owner or item owner was registered before. Use SetupProjectile"
+				);
+			return false;
+		}
+	}
+	return true;
 }
