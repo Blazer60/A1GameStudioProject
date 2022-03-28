@@ -17,6 +17,9 @@ class A1GAMESTUDIOPROJECT_API AProjectile
 public:
 	AProjectile();
 
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void OnHit(UItemOwner* OtherOwner, FVector Location);
+
 	UFUNCTION(BlueprintCallable)
     void SetupProjectile(AActor* NewActorOwner, UItemOwner* ItemOwnerComponent);
 
@@ -43,4 +46,10 @@ public:
 
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
     USphereComponent* SphereComponent;
+
+
+protected:
+	virtual void BeginPlay() override;
+	
+	bool CheckOwner();
 };
