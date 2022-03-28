@@ -54,7 +54,7 @@ public:
 	int Level { 0 };
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TEnumAsByte<EOwnerType> Type { None };
+	TEnumAsByte<EOwnerType> Type { Enemy };
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UHitCallback* HitCallback { nullptr };
