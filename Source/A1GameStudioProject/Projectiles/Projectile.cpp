@@ -32,7 +32,8 @@ void AProjectile::OnOverlapDelegate(UPrimitiveComponent* OverlappedComponent, AA
 		return;
 
 	// Always hurt things if they are not set to type None.
-	OtherOwner->OnHurt(ItemOwner, Damage);
+	if (OtherOwner->Type != OwnerType)
+		OtherOwner->OnHurt(ItemOwner, Damage);
 
 	if (OtherOwner->Type != OwnerType && ItemOwner)
 		ItemOwner->OnHit(OtherOwner, ProcRate, Damage, SweepResult.Location);
@@ -44,6 +45,10 @@ void AProjectile::BeginPlay()
 {
 	Super::BeginPlay();
 
+	//FScriptDelegate InDelegate;
+	//InDelegate.BindUFunction(this, "OnOverlapDelegate");
+	//SphereComponent->OnComponentBeginOverlap.Add(InDelegate);
+
 	// Hit Delegates must always be attached at runtime.
 	SphereComponent->OnComponentBeginOverlap.AddDynamic(this, &AProjectile::OnOverlapDelegate);
 }
@@ -54,9 +59,9 @@ bool AProjectile::CheckOwner()
 	{
 		if (!ActorOwner && !ItemOwner)
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red,
-				"Hit Registered but no actor owner or item owner was registered before. Use SetupProjectile"
-				);
+			//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red,
+				//"Hit Registered but no actor owner or item owner was registered before. Use SetupProjectile"
+				//);
 			return false;
 		}
 	}
