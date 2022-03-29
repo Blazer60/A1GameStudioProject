@@ -30,6 +30,15 @@ void ABurnProjectile::Tick(float DeltaTime)
 	}
 }
 
+void ABurnProjectile::BeginOverlapProxy(
+	UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, 
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, 
+	bool bFromSweep, const FHitResult& SweepResult)
+{
+	BeginOverlap(OverlappedComponent, OtherActor, OtherComp, OtherBodyIndex, bFromSweep, SweepResult);
+	OnOverlapDelegate(OverlappedComponent, OtherActor, OtherComp, OtherBodyIndex, bFromSweep, SweepResult);
+}
+
 void ABurnProjectile::BeginOverlap(
 	UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex,
@@ -79,9 +88,12 @@ void ABurnProjectile::BurnTick()
 
 void ABurnProjectile::BeginPlay()
 {
-	Super::BeginPlay();
+//	Super::BeginPlay();
 	// Hit Delegates must always be attached at runtime.
-    SphereComponent->OnComponentBeginOverlap.AddDynamic(this, &ABurnProjectile::BeginOverlap);
+	SphereComponent->OnComponentBeginOverlap.AddDynamic(this, &ABurnProjectile::BeginOverlapProxy);
+	//SphereComponent->OnComponentBeginOverlap.AddDynamic(this, &AProjectile::OnOverlapDelegate);
+
+    //SphereComponent->OnComponentBeginOverlap.AddDynamic(this, &ABurnProjectile::BeginOverlap);
     SphereComponent->OnComponentEndOverlap.AddDynamic(this, &ABurnProjectile::EndOverlap);
 }
 
