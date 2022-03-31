@@ -48,18 +48,25 @@ void UItemOwner::OnHurt(UItemOwner* By, float Damage)
 	}
 }
 
+void UItemOwner::OnKill(const FVector& Location, const int Money) const
+{
+	if (KillCallback)
+		KillCallback->Broadcast(Location, Money);
+}
+
 void UItemOwner::BeginPlay()
 {
 	Super::BeginPlay();
 	auto *Owner = GetOwner();
 	HitCallback  = Owner->FindComponentByClass<UHitCallback>();
 	HurtCallback = Owner->FindComponentByClass<UHurtCallback>();
+	KillCallback = Owner->FindComponentByClass<UKillCallback>();
 	if (!HitCallback)
 		Warn("Hit Callback");
 	if (!HurtCallback)
-	{
 		Warn("Hurt Callback");
-	}
+	if (!KillCallback)
+		Warn("Kill Callback");
 }
 
 void UItemOwner::Warn(const FString &Item) const

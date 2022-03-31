@@ -80,7 +80,14 @@ void ABurnProjectile::BurnTick()
         OtherOwner->OnHurt(ItemOwner, Damage);
 
         if (OtherOwner->Type != OwnerType && ItemOwner)
+        {
+	        ItemOwner->OnHit(OtherOwner, ProcRate, Damage, Location);
         	ItemOwner->OnHit(OtherOwner, ProcRate, Damage, Location);
+        	if (OtherOwner->Health <= 0)
+        	{
+        		ItemOwner->OnKill(Location, 0);  // todo: Money system.
+        	}
+        }
 
         OnHit(OtherOwner, Location);
 	}

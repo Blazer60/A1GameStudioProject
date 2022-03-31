@@ -5,6 +5,7 @@
 #include "Common.h"
 
 #include "CoreMinimal.h"
+#include "Callbacks/KillCallback.h"
 #include "Components/ActorComponent.h"
 #include "ItemOwner.generated.h"
 
@@ -62,11 +63,15 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UHurtCallback* HurtCallback { nullptr };
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UKillCallback* KillCallback { nullptr };
+
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 	void OnDeath(UItemOwner* By, float Damage);
 	
 	void OnHit(UItemOwner *Target, float ProcRate, float Damage, FVector HitLocation) const;
 	void OnHurt(UItemOwner *By, float Damage);
+	void OnKill(const FVector &Location, const int Money) const;
 
 	virtual void BeginPlay() override;
 	// UPROPERTY(EditAnywhere, BlueprintReadWrite)

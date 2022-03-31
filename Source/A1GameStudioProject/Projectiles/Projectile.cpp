@@ -36,7 +36,13 @@ void AProjectile::OnOverlapDelegate(UPrimitiveComponent* OverlappedComponent, AA
 		OtherOwner->OnHurt(ItemOwner, Damage);
 
 	if (OtherOwner->Type != OwnerType && ItemOwner)
+	{
 		ItemOwner->OnHit(OtherOwner, ProcRate, Damage, SweepResult.Location);
+		if (OtherOwner->Health <= 0)
+		{
+			ItemOwner->OnKill(SweepResult.Location, 0);  // todo: Money system.
+		}
+	}
 
 	OnHit(OtherOwner, SweepResult.Location);
 }
