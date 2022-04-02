@@ -9,13 +9,7 @@
 ABurnProjectile::ABurnProjectile()
 {
 	PrimaryActorTick.bCanEverTick = true;
-
-	FScriptDelegate BeginOverlapDelegate;
-	BeginOverlapDelegate.BindUFunction(this, "BeginOverlap");
-	SphereComponent->OnComponentBeginOverlap.AddUnique(BeginOverlapDelegate);
-	
-	// SphereComponent->OnComponentBeginOverlap.AddDynamic(this, &ABurnProjectile::BeginOverlap);
-	// SphereComponent->OnComponentEndOverlap.AddDynamic(this, &ABurnProjectile::EndOverlap);
+	PrimaryActorTick.bStartWithTickEnabled = true;
 }
 
 
@@ -82,25 +76,19 @@ void ABurnProjectile::BurnTick()
         if (OtherOwner->Type != OwnerType && ItemOwner)
         {
 	        ItemOwner->OnHit(OtherOwner, ProcRate, Damage, Location);
-        	ItemOwner->OnHit(OtherOwner, ProcRate, Damage, Location);
         	if (OtherOwner->Health <= 0)
         	{
         		ItemOwner->OnKill(Location, 0);  // todo: Money system.
         	}
         }
-
         OnHit(OtherOwner, Location);
 	}
 }
 
 void ABurnProjectile::BeginPlay()
 {
-//	Super::BeginPlay();
 	// Hit Delegates must always be attached at runtime.
 	SphereComponent->OnComponentBeginOverlap.AddDynamic(this, &ABurnProjectile::BeginOverlapProxy);
-	//SphereComponent->OnComponentBeginOverlap.AddDynamic(this, &AProjectile::OnOverlapDelegate);
-
-    //SphereComponent->OnComponentBeginOverlap.AddDynamic(this, &ABurnProjectile::BeginOverlap);
     SphereComponent->OnComponentEndOverlap.AddDynamic(this, &ABurnProjectile::EndOverlap);
 }
 

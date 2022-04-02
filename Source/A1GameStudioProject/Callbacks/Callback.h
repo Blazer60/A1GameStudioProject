@@ -22,9 +22,6 @@ protected:
 template <typename ... TArgs>
 void TCallback<TArgs...>::Broadcast_Impl(const TArgs &... Args)
 {
-	const FString Message = FString::Printf(TEXT("Broadcasting to %d Subscribers"), Subscribers.Num());
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green,
-		Message);
 	for (const auto &Subscriber : Subscribers)
 		Subscriber(Args...);
 }

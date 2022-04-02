@@ -7,7 +7,7 @@
 
 AProjectile::AProjectile()
 {
-	PrimaryActorTick.bCanEverTick = false;
+	PrimaryActorTick.bCanEverTick = true;
 	SphereComponent = CreateDefaultSubobject<USphereComponent>("Sphere Collision");
 
 	// The projectile movement component needs a collision object at root. So we force it here.
