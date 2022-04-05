@@ -5,7 +5,9 @@
 
 #include "Callbacks/HitCallback.h"
 #include "Callbacks/HurtCallback.h"
+#include "Projectiles/Projectile.h"
 #include "ItemComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 
 UItemOwner::UItemOwner()
@@ -50,6 +52,13 @@ void UItemOwner::OnKill(const FVector& Location, const int Money) const
 {
 	if (KillCallback)
 		KillCallback->Broadcast(Location, Money);
+}
+
+void UItemOwner::SpawnProjectile(TSubclassOf<AProjectile> Class, const FTransform& Transform)
+{
+	auto *Projectile = Cast<AProjectile>(UGameplayStatics::BeginDeferredActorSpawnFromClass(this, Class, Transform));
+	Projectile->SetupProjectile(GetOwner(), this);
+	UGameplayStatics::FinishSpawningActor(Projectile, Transform);
 }
 
 void UItemOwner::BeginPlay()

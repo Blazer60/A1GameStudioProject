@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "A1GameStudioProject/Common.h"
+#include "A1GameStudioProject/ItemOwner.h"
 #include "Components/SphereComponent.h"
 #include "GameFramework/Actor.h"
 #include "Projectile.generated.h"
@@ -16,6 +17,7 @@ class A1GAMESTUDIOPROJECT_API AProjectile
 	GENERATED_BODY()
 public:
 	AProjectile();
+	AProjectile(AActor *NewActorOwner, UItemOwner* ItemOwnerComponent);
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 	void OnHit(UItemOwner* OtherOwner, FVector Location);
@@ -23,7 +25,7 @@ public:
 	UFUNCTION(BlueprintCallable)
     void SetupProjectile(AActor* NewActorOwner, UItemOwner* ItemOwnerComponent);
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
     void OnOverlapDelegate(
     	UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
     	int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult
@@ -46,7 +48,6 @@ public:
 
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
     USphereComponent* SphereComponent;
-
 
 protected:
 	virtual void BeginPlay() override;

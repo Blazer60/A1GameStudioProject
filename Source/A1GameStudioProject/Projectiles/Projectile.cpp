@@ -12,6 +12,20 @@ AProjectile::AProjectile()
 
 	// The projectile movement component needs a collision object at root. So we force it here.
 	RootComponent = SphereComponent;
+	
+	SphereComponent->OnComponentBeginOverlap.AddDynamic(this, &AProjectile::OnOverlapDelegate);
+}
+
+AProjectile::AProjectile(AActor* NewActorOwner, UItemOwner* ItemOwnerComponent)
+	: ActorOwner(NewActorOwner), ItemOwner(ItemOwnerComponent)
+{
+	PrimaryActorTick.bCanEverTick = true;
+	SphereComponent = CreateDefaultSubobject<USphereComponent>("Sphere Collision");
+
+	// The projectile movement component needs a collision object at root. So we force it here.
+	RootComponent = SphereComponent;
+	
+	SphereComponent->OnComponentBeginOverlap.AddDynamic(this, &AProjectile::OnOverlapDelegate);
 }
 
 void AProjectile::SetupProjectile(AActor* NewActorOwner, UItemOwner* ItemOwnerComponent)
@@ -56,7 +70,6 @@ void AProjectile::BeginPlay()
 	//SphereComponent->OnComponentBeginOverlap.Add(InDelegate);
 
 	// Hit Delegates must always be attached at runtime.
-	SphereComponent->OnComponentBeginOverlap.AddDynamic(this, &AProjectile::OnOverlapDelegate);
 }
 
 bool AProjectile::CheckOwner()

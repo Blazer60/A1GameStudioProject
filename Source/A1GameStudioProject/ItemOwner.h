@@ -12,6 +12,7 @@
 class UHitCallback;
 class UHurtCallback;
 class UItemComponent;
+class AProjectile;
 
 UCLASS(ClassGroup=(Item), meta=(BlueprintSpawnableComponent))
 class A1GAMESTUDIOPROJECT_API UItemOwner
@@ -72,6 +73,9 @@ public:
 	void OnHit(UItemOwner *Target, float ProcRate, float Damage, FVector HitLocation) const;
 	void OnHurt(UItemOwner *By, float Damage);
 	void OnKill(const FVector &Location, const int Money) const;
+
+	UFUNCTION(BlueprintCallable)
+	void SpawnProjectile(TSubclassOf<AProjectile> Class, const FTransform &Transform);
 
 	virtual void BeginPlay() override;
 	// UPROPERTY(EditAnywhere, BlueprintReadWrite)
