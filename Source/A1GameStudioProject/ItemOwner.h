@@ -25,35 +25,49 @@ public:
 	UFUNCTION(BlueprintCallable)
 	UItemComponent *AddItem(TSubclassOf<UItemComponent> ItemClass);
 
+	UFUNCTION(BlueprintCallable)
+	void SpawnProjectile(TSubclassOf<AProjectile> Class, const FTransform &Transform);
+	
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void OnDeath(UItemOwner* By, float Damage);
+	
+	void OnHit(UItemOwner *Target, float ProcRate, float Damage, FVector HitLocation) const;
+	void OnHurt(UItemOwner *By, float Damage);
+	
+	virtual void OnKill(const FVector &Location, const int Money);
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float Health { 100.f };
+    float Health { 100.f };
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    float BaseMaxHealth { 100.f };
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    float TotalMaxHealth { 100.f };
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    float BaseMovementSpeed { 600.f };
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    float TotalMovementSpeed { 600.f };
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    float BaseJumpHeight { 400.f };
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    float TotalJumpHeight { 400.f };
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    float BaseDamageMultiplier { 1.f };
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    float TotalDamageMultiplier { 1.f };
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    int32 Level { 0 };
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float BaseMaxHealth { 100.f };
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float TotalMaxHealth { 100.f };
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float BaseMovementSpeed { 600.f };
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float TotalMovementSpeed { 600.f };
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float BaseJumpHeight { 400.f };
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float TotalJumpHeight { 400.f };
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float BaseDamageMultiplier { 1.f };
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float TotalDamageMultiplier { 1.f };
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int Level { 0 };
+	int32 BaseReward { 100 };
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TEnumAsByte<EOwnerType> Type { Enemy };
@@ -67,22 +81,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UKillCallback* KillCallback { nullptr };
 
-	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
-	void OnDeath(UItemOwner* By, float Damage);
-	
-	void OnHit(UItemOwner *Target, float ProcRate, float Damage, FVector HitLocation) const;
-	void OnHurt(UItemOwner *By, float Damage);
-	void OnKill(const FVector &Location, const int Money) const;
-
-	UFUNCTION(BlueprintCallable)
-	void SpawnProjectile(TSubclassOf<AProjectile> Class, const FTransform &Transform);
-
-	virtual void BeginPlay() override;
-	// UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	// TArray<UItemComponent *> Items;
-
-	// UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	// UItemComponent *ItemPtr;
 protected:
+	virtual void BeginPlay() override;
+	
 	void Warn(const FString &Item) const;
 };

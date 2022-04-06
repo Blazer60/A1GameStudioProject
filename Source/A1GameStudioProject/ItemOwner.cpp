@@ -6,7 +6,7 @@
 #include "Callbacks/HitCallback.h"
 #include "Callbacks/HurtCallback.h"
 #include "Projectiles/Projectile.h"
-#include "ItemComponent.h"
+#include "Items/ItemComponent.h"
 #include "Kismet/GameplayStatics.h"
 
 
@@ -48,7 +48,7 @@ void UItemOwner::OnHurt(UItemOwner* By, float Damage)
 	}
 }
 
-void UItemOwner::OnKill(const FVector& Location, const int Money) const
+void UItemOwner::OnKill(const FVector& Location, const int Money)
 {
 	if (KillCallback)
 		KillCallback->Broadcast(Location, Money);

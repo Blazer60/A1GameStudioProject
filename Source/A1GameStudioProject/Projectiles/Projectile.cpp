@@ -33,6 +33,7 @@ void AProjectile::SetupProjectile(AActor* NewActorOwner, UItemOwner* ItemOwnerCo
 	this->ActorOwner = NewActorOwner;
     this->ItemOwner = ItemOwnerComponent;
     this->OwnerType = ItemOwnerComponent->Type;
+	Damage *= ItemOwnerComponent->TotalDamageMultiplier;
 }
 
 void AProjectile::OnOverlapDelegate(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
@@ -54,7 +55,7 @@ void AProjectile::OnOverlapDelegate(UPrimitiveComponent* OverlappedComponent, AA
 		ItemOwner->OnHit(OtherOwner, ProcRate, Damage, SweepResult.Location);
 		if (OtherOwner->Health <= 0)
 		{
-			ItemOwner->OnKill(SweepResult.Location, 0);  // todo: Money system.
+			ItemOwner->OnKill(SweepResult.Location, OtherOwner->BaseReward);
 		}
 	}
 
