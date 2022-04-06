@@ -11,13 +11,23 @@ ASpawnDirector::ASpawnDirector()
 
 int ASpawnDirector::EnemyLevel() const
 {
-	const float Level = (1.f / Alpha) * FMath::Pow(0.016f * GetGameTimeSinceCreation(), Beta) + 1.f;
+	const float Level = (1.f / Alpha) * FMath::Pow(0.016f * GetGameTimeSinceCreation() + TimeOffset, Beta) + 1.f;
 	return FMath::FloorToInt(Level);	
 }
 
-float ASpawnDirector::GetCostOf(const UEnemyDetails* EnemyDetails) const
+float ASpawnDirector::GetCostOfEnemy(const UEnemyDetails* EnemyDetails) const
 {
 	return EnemyLevel() * EnemyDetails->GroupSize * EnemyDetails->Cost;	
+}
+
+float ASpawnDirector::GetCostOfItem(const UItemDetails* ItemDetails) const
+{
+	return ItemDetails->Cost * ItemDetails->Quantity;
+}
+
+int32 ASpawnDirector::GetItemCount() const
+{
+	return FMath::FloorToInt(0.5f * EnemyLevel());
 }
 
 FVector ASpawnDirector::GetRandomPointInZone(const float Min, const float Max)
@@ -40,8 +50,23 @@ void ASpawnDirector::RollNewEnemy()
 	if (Enemies.Num() <= 0)
 		return;
 	const int32 RandomIndex = FMath::RandRange(0, Enemies.Num() - 1);
-	Enemy = Enemies[RandomIndex];
-	NextSpawnCost = GetCostOf(Enemy);	
+	EnemyToSpawn = Enemies[RandomIndex];
+	NextSpawnCost = GetCostOfEnemy(EnemyToSpawn);
+	
+	if (Items.Num() <= 0)
+		return;
+
+	const int32 ItemCount = GetItemCount();
+    ItemsToSpawn.Empty();
+    ItemsToSpawn.Reserve(ItemCount);
+	
+	for (int i = 0; i < ItemCount; ++i)
+	{
+		const int32 RandomINT32 = FMath::RandRange(0, Items.Num() - 1);
+		auto *const Item = Items[RandomINT32];
+		ItemsToSpawn.Add(Item);
+		NextSpawnCost += GetCostOfItem(Item);
+	}
 }
 
 void ASpawnDirector::Tick(float DeltaTime)
@@ -51,8 +76,8 @@ void ASpawnDirector::Tick(float DeltaTime)
 	if (Credits >= NextSpawnCost)
 	{
 		Credits -= NextSpawnCost;
-		if (Enemy)
-			SpawnEnemy(Enemy);
+		if (EnemyToSpawn)
+			SpawnEnemy(EnemyToSpawn, ItemsToSpawn);
 		RollNewEnemy();
 	}
 }

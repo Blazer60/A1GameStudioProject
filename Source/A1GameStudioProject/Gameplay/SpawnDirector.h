@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Details/Details.h"
 #include "GameFramework/Actor.h"
 #include "SpawnDirector.generated.h"
 
@@ -22,7 +23,13 @@ public:
 	int EnemyLevel() const;
 
 	UFUNCTION(BlueprintPure, Category=SpawnDirector)
-	float GetCostOf(const UEnemyDetails *EnemyDetails) const;
+	float GetCostOfEnemy(const UEnemyDetails *EnemyDetails) const;
+
+	UFUNCTION(BlueprintPure, Category=SpawnDirector)
+	float GetCostOfItem(const UItemDetails *ItemDetails) const;
+
+	UFUNCTION(BlueprintPure, Category=SpawnDirector)
+	int32 GetItemCount() const;
 
 	UFUNCTION(BlueprintPure, Category=Spawning)
 	static FVector GetRandomPointInZone(float Min, float Max);
@@ -51,8 +58,15 @@ protected:
 	UPROPERTY(EditAnywhere, Instanced, Category=SpawnDirector)
 	TArray<UItemDetails*> Items;
 
+	/** How far into the game should it start (in seconds) */
 	UPROPERTY(EditAnywhere, Category=SpawnDirector)
-	UEnemyDetails* Enemy { nullptr };
+	float TimeOffset { 0.f };
+	
+	UPROPERTY()
+	UEnemyDetails* EnemyToSpawn { nullptr };
+
+	UPROPERTY()
+	TArray<UItemDetails*> ItemsToSpawn;
 	
 	UPROPERTY(EditAnywhere, Category=SpawnDirector)
 	float NextSpawnCost { 0.f };
@@ -61,5 +75,5 @@ protected:
 	void RollNewEnemy();
 
 	UFUNCTION(BlueprintImplementableEvent)
-	void SpawnEnemy(const UEnemyDetails *EnemyDetails);	
+	void SpawnEnemy(const UEnemyDetails *EnemyDetails, const TArray<UItemDetails*>& EnemyItems);	
 };
