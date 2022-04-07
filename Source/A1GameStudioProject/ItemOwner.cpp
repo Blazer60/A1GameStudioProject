@@ -13,6 +13,11 @@
 UItemOwner::UItemOwner()
 {
 	PrimaryComponentTick.bCanEverTick = true;
+	
+	MaxHealth			= CreateDefaultSubobject<UStat>("Max Health");
+	Speed				= CreateDefaultSubobject<UStat>("Speed");
+	JumpHeight			= CreateDefaultSubobject<UStat>("Jump Height");
+	DamageMultiplier	= CreateDefaultSubobject<UStat>("Damage Multiplier");
 }
 
 UItemComponent* UItemOwner::AddItem(TSubclassOf<UItemComponent> ItemClass)

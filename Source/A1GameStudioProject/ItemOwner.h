@@ -31,8 +31,11 @@ public:
 	
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 	void OnDeath(UItemOwner* By, float Damage);
-	
+
+	UFUNCTION(BlueprintCallable, Category=Callbacks)
 	void OnHit(UItemOwner *Target, float ProcRate, float Damage, FVector HitLocation) const;
+
+	UFUNCTION(BlueprintCallable, Category=Callbacks)
 	void OnHurt(UItemOwner *By, float Damage);
 	
 	virtual void OnKill(const FVector &Location, const int Money);
@@ -41,16 +44,16 @@ public:
 	float Health			{ 100.f };
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Instanced, Category=Stats)
-	UStat *MaxHealth { NewObject<UStat>(GetOuter()) };
+	UStat *MaxHealth;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Instanced, Category=Stats)
-	UStat *Speed { NewObject<UStat>(GetOuter()) };;
+	UStat *Speed;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Instanced, Category=Stats)
-	UStat *JumpHeight { NewObject<UStat>(GetOuter()) };;
+	UStat *JumpHeight;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Instanced, Category=Stats)
-	UStat *DamageMultiplier { NewObject<UStat>(GetOuter()) };;
+	UStat *DamageMultiplier;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 Level { 0 };

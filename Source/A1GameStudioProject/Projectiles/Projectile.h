@@ -22,7 +22,7 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 	void OnHit(UItemOwner* OtherOwner, FVector Location);
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION()
     void SetupProjectile(AActor* NewActorOwner, UItemOwner* ItemOwnerComponent);
 
 	UFUNCTION(BlueprintCallable)

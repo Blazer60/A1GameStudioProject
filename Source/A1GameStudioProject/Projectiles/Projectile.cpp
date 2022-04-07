@@ -33,7 +33,8 @@ void AProjectile::SetupProjectile(AActor* NewActorOwner, UItemOwner* ItemOwnerCo
 	this->ActorOwner = NewActorOwner;
     this->ItemOwner = ItemOwnerComponent;
     this->OwnerType = ItemOwnerComponent->Type;
-	Damage *= ItemOwnerComponent->DamageMultiplier->Total();
+	if (ItemOwnerComponent && ItemOwnerComponent->DamageMultiplier)
+		Damage *= ItemOwnerComponent->DamageMultiplier->Total();
 }
 
 void AProjectile::OnOverlapDelegate(
