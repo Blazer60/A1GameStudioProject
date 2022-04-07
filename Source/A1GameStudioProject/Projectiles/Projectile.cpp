@@ -3,6 +3,7 @@
 
 #include "Projectile.h"
 #include "A1GameStudioProject/ItemOwner.h"
+#include "Kismet/GameplayStatics.h"
 
 
 AProjectile::AProjectile()
@@ -28,13 +29,23 @@ AProjectile::AProjectile(AActor* NewActorOwner, UItemOwner* ItemOwnerComponent)
 	SphereComponent->OnComponentBeginOverlap.AddDynamic(this, &AProjectile::OnOverlapDelegate);
 }
 
+void AProjectile::SpawnProjectile(TSubclassOf<AProjectile> Class, const FTransform& Transform)
+{
+	auto *Projectile = Cast<AProjectile>(UGameplayStatics::BeginDeferredActorSpawnFromClass(this, Class, Transform));
+	Projectile->SetupProjectile(ActorOwner, ItemOwner);
+	UGameplayStatics::FinishSpawningActor(Projectile, Transform);
+}
+
 void AProjectile::SetupProjectile(AActor* NewActorOwner, UItemOwner* ItemOwnerComponent)
 {
 	this->ActorOwner = NewActorOwner;
     this->ItemOwner = ItemOwnerComponent;
-    this->OwnerType = ItemOwnerComponent->Type;
-	if (ItemOwnerComponent && ItemOwnerComponent->DamageMultiplier)
-		Damage *= ItemOwnerComponent->DamageMultiplier->Total();
+	if (ItemOwnerComponent)
+	{
+		this->OwnerType = ItemOwnerComponent->Type;
+		if (ItemOwnerComponent->DamageMultiplier)
+        		Damage *= ItemOwnerComponent->DamageMultiplier->Total();
+	}
 }
 
 void AProjectile::OnOverlapDelegate(
@@ -51,29 +62,21 @@ void AProjectile::OnOverlapDelegate(
 
 	// Always hurt things if they are not set to type None.
 	if (OtherOwner->Type != OwnerType)
-		OtherOwner->OnHurt(ItemOwner, Damage);
-
-	if (OtherOwner->Type != OwnerType && ItemOwner)
 	{
-		ItemOwner->OnHit(OtherOwner, ProcRate, Damage, SweepResult.Location);
-		if (OtherOwner->Health <= 0)
+		OtherOwner->OnHurt(ItemOwner, Damage);
+		if (ItemOwner)
 		{
-			ItemOwner->OnKill(SweepResult.Location, OtherOwner->BaseReward);
+			ItemOwner->OnHit(OtherOwner, ProcRate, Damage, SweepResult.Location);
+			OnHit(OtherOwner, SweepResult.Location);
+            if (OtherOwner->Health <= 0)
+            	ItemOwner->OnKill(SweepResult.Location, OtherOwner->BaseReward);
 		}
 	}
-
-	OnHit(OtherOwner, SweepResult.Location);
 }
 
 void AProjectile::BeginPlay()
 {
 	Super::BeginPlay();
-
-	//FScriptDelegate InDelegate;
-	//InDelegate.BindUFunction(this, "OnOverlapDelegate");
-	//SphereComponent->OnComponentBeginOverlap.Add(InDelegate);
-
-	// Hit Delegates must always be attached at runtime.
 }
 
 bool AProjectile::CheckOwner()
