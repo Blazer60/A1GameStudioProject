@@ -62,6 +62,9 @@ public:
 	int32 BaseReward { 100 };
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<AProjectile> ProjectileType;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TEnumAsByte<EOwnerType> Type { Enemy };
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
