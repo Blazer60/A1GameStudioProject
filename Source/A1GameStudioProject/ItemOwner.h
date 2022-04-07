@@ -24,7 +24,7 @@ public:
 	UItemOwner();
 
 	UFUNCTION(BlueprintCallable)
-	UItemComponent *AddItem(TSubclassOf<UItemComponent> ItemClass);
+	UItemComponent *AddItem(TSubclassOf<UItemComponent> ItemClass, int32 Quantity=1);
 
 	UFUNCTION(BlueprintCallable)
 	void SpawnProjectile(TSubclassOf<AProjectile> Class, const FTransform &Transform);

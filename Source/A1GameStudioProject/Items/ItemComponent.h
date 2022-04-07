@@ -19,6 +19,15 @@ class A1GAMESTUDIOPROJECT_API UItemComponent
 public:	
 	UItemComponent();
 
+	UFUNCTION(BlueprintCallable)
+    void Attach(int NewCount);
+
+    UFUNCTION(BlueprintCallable)
+    void Increase(int Quantity=1);
+
+    UFUNCTION(BlueprintCallable)
+    void Decrease(int Quantity=1);
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -27,15 +36,6 @@ protected:
 
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	UItemOwner* ItemOwner() const;
-
-	UFUNCTION(BlueprintCallable)
-	void Attach(int NewCount);
-
-	UFUNCTION(BlueprintCallable)
-	void Increase(int Quantity=1);
-
-	UFUNCTION(BlueprintCallable)
-	void Decrease(int Quantity=1);
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 	void OnAttach();
