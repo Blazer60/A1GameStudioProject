@@ -5,6 +5,7 @@
 #include "Common.h"
 
 #include "CoreMinimal.h"
+#include "Stat.h"
 #include "Callbacks/KillCallback.h"
 #include "Components/ActorComponent.h"
 #include "ItemOwner.generated.h"
@@ -35,33 +36,21 @@ public:
 	void OnHurt(UItemOwner *By, float Damage);
 	
 	virtual void OnKill(const FVector &Location, const int Money);
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Stats)
+	float Health			{ 100.f };
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    float Health { 100.f };
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Instanced, Category=Stats)
+	UStat *MaxHealth { NewObject<UStat>(GetOuter()) };
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    float BaseMaxHealth { 100.f };
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Instanced, Category=Stats)
+	UStat *Speed { NewObject<UStat>(GetOuter()) };;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    float TotalMaxHealth { 100.f };
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Instanced, Category=Stats)
+	UStat *JumpHeight { NewObject<UStat>(GetOuter()) };;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    float BaseMovementSpeed { 600.f };
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    float TotalMovementSpeed { 600.f };
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    float BaseJumpHeight { 400.f };
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    float TotalJumpHeight { 400.f };
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    float BaseDamageMultiplier { 1.f };
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    float TotalDamageMultiplier { 1.f };
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Instanced, Category=Stats)
+	UStat *DamageMultiplier { NewObject<UStat>(GetOuter()) };;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 Level { 0 };

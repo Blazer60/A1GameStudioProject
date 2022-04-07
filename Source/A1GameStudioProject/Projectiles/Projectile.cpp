@@ -33,11 +33,13 @@ void AProjectile::SetupProjectile(AActor* NewActorOwner, UItemOwner* ItemOwnerCo
 	this->ActorOwner = NewActorOwner;
     this->ItemOwner = ItemOwnerComponent;
     this->OwnerType = ItemOwnerComponent->Type;
-	Damage *= ItemOwnerComponent->TotalDamageMultiplier;
+	Damage *= ItemOwnerComponent->DamageMultiplier->Total();
 }
 
-void AProjectile::OnOverlapDelegate(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
-                                    UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+void AProjectile::OnOverlapDelegate(
+	UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+    UPrimitiveComponent* OtherComp, int32 OtherBodyIndex,
+    bool bFromSweep, const FHitResult& SweepResult)
 {
 	if (!CheckOwner())
 		return;
