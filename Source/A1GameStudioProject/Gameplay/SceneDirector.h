@@ -27,6 +27,6 @@ protected:
 	UPROPERTY(EditAnywhere, Category=Chests)
 	int32 ChestSpawnAmount { 30 };
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Items)
-	TArray<TSubclassOf<class AWorldItem>> Items;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Instanced, Category=Items)
+	TArray<class UItemDetails*> Items;
 };

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Common.h"
 #include "GameFramework/Actor.h"
 #include "Chest.generated.h"
 
@@ -14,4 +15,10 @@ class A1GAMESTUDIOPROJECT_API AChest
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Item)
 	TSubclassOf<class AWorldItem> Item;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Item)
+	TEnumAsByte<ERarity> Rarity { Common };
+
+	UFUNCTION(BlueprintCallable)
+	void Setup(TSubclassOf<AWorldItem> NewItem, TEnumAsByte<ERarity> NewRarity);
 };
