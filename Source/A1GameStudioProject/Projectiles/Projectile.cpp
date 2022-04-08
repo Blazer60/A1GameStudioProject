@@ -3,6 +3,7 @@
 
 #include "Projectile.h"
 #include "A1GameStudioProject/ItemOwner.h"
+#include "Kismet/GameplayStatics.h"
 
 
 AProjectile::AProjectile()
@@ -12,17 +13,45 @@ AProjectile::AProjectile()
 
 	// The projectile movement component needs a collision object at root. So we force it here.
 	RootComponent = SphereComponent;
+	
+	SphereComponent->OnComponentBeginOverlap.AddDynamic(this, &AProjectile::OnOverlapDelegate);
+}
+
+AProjectile::AProjectile(AActor* NewActorOwner, UItemOwner* ItemOwnerComponent)
+	: ActorOwner(NewActorOwner), ItemOwner(ItemOwnerComponent)
+{
+	PrimaryActorTick.bCanEverTick = true;
+	SphereComponent = CreateDefaultSubobject<USphereComponent>("Sphere Collision");
+
+	// The projectile movement component needs a collision object at root. So we force it here.
+	RootComponent = SphereComponent;
+	
+	SphereComponent->OnComponentBeginOverlap.AddDynamic(this, &AProjectile::OnOverlapDelegate);
+}
+
+void AProjectile::SpawnProjectile(TSubclassOf<AProjectile> Class, const FTransform& Transform)
+{
+	auto *Projectile = Cast<AProjectile>(UGameplayStatics::BeginDeferredActorSpawnFromClass(this, Class, Transform));
+	Projectile->SetupProjectile(ActorOwner, ItemOwner);
+	UGameplayStatics::FinishSpawningActor(Projectile, Transform);
 }
 
 void AProjectile::SetupProjectile(AActor* NewActorOwner, UItemOwner* ItemOwnerComponent)
 {
 	this->ActorOwner = NewActorOwner;
     this->ItemOwner = ItemOwnerComponent;
-    this->OwnerType = ItemOwnerComponent->Type;
+	if (ItemOwnerComponent)
+	{
+		this->OwnerType = ItemOwnerComponent->Type;
+		if (ItemOwnerComponent->DamageMultiplier)
+        		Damage *= ItemOwnerComponent->DamageMultiplier->Total();
+	}
 }
 
-void AProjectile::OnOverlapDelegate(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
-                                    UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+void AProjectile::OnOverlapDelegate(
+	UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+    UPrimitiveComponent* OtherComp, int32 OtherBodyIndex,
+    bool bFromSweep, const FHitResult& SweepResult)
 {
 	if (!CheckOwner())
 		return;
@@ -33,30 +62,21 @@ void AProjectile::OnOverlapDelegate(UPrimitiveComponent* OverlappedComponent, AA
 
 	// Always hurt things if they are not set to type None.
 	if (OtherOwner->Type != OwnerType)
-		OtherOwner->OnHurt(ItemOwner, Damage);
-
-	if (OtherOwner->Type != OwnerType && ItemOwner)
 	{
-		ItemOwner->OnHit(OtherOwner, ProcRate, Damage, SweepResult.Location);
-		if (OtherOwner->Health <= 0)
+		OtherOwner->OnHurt(ItemOwner, Damage);
+		if (ItemOwner)
 		{
-			ItemOwner->OnKill(SweepResult.Location, 0);  // todo: Money system.
+			ItemOwner->OnHit(OtherOwner, ProcRate, Damage, SweepResult.Location);
+			OnHit(OtherOwner, SweepResult.Location);
+            if (OtherOwner->Health <= 0)
+            	ItemOwner->OnKill(SweepResult.Location, OtherOwner->BaseReward);
 		}
 	}
-
-	OnHit(OtherOwner, SweepResult.Location);
 }
 
 void AProjectile::BeginPlay()
 {
 	Super::BeginPlay();
-
-	//FScriptDelegate InDelegate;
-	//InDelegate.BindUFunction(this, "OnOverlapDelegate");
-	//SphereComponent->OnComponentBeginOverlap.Add(InDelegate);
-
-	// Hit Delegates must always be attached at runtime.
-	SphereComponent->OnComponentBeginOverlap.AddDynamic(this, &AProjectile::OnOverlapDelegate);
 }
 
 bool AProjectile::CheckOwner()

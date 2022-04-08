@@ -45,7 +45,7 @@ void ABurnProjectile::BeginOverlap(
 	if (!OtherOwner || OwnerType == None)
 		return;
 
-	if (BurnedOwners.Find(OtherOwner) == INDEX_NONE)
+	if (OtherOwner->Type != OwnerType && BurnedOwners.Find(OtherOwner) == INDEX_NONE)
 		BurnedOwners.Add(OtherOwner);
 }
 
@@ -72,15 +72,13 @@ void ABurnProjectile::BurnTick()
 		}
         		
         OtherOwner->OnHurt(ItemOwner, Damage);
-
-        if (OtherOwner->Type != OwnerType && ItemOwner)
+		
+        ItemOwner->OnHit(OtherOwner, ProcRate, Damage, Location);
+        if (OtherOwner->Health <= 0)
         {
-	        ItemOwner->OnHit(OtherOwner, ProcRate, Damage, Location);
-        	if (OtherOwner->Health <= 0)
-        	{
-        		ItemOwner->OnKill(Location, 0);  // todo: Money system.
-        	}
+        	ItemOwner->OnKill(Location, OtherOwner->BaseReward);
         }
+        
         OnHit(OtherOwner, Location);
 	}
 }
