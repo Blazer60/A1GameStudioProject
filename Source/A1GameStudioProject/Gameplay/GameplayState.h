@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "SpawnDirector.h"
 #include "GameFramework/GameStateBase.h"
 #include "GameplayState.generated.h"
 
@@ -22,7 +21,10 @@ public:
 	virtual void BeginPlay() override;
 	
 	UPROPERTY(EditAnywhere)
-	TSubclassOf<ASpawnDirector> SpawnDirectorClass;
+	TSubclassOf<class ASpawnDirector> SpawnDirectorClass;
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class ASceneDirector> SceneDirectorClass;
 protected:
 	virtual void Tick(float DeltaSeconds) override;
 

@@ -3,6 +3,7 @@
 
 #include "GameplayState.h"
 
+#include "SceneDirector.h"
 #include "SpawnDirector.h"
 
 AGameplayState::AGameplayState()
@@ -13,7 +14,10 @@ AGameplayState::AGameplayState()
 void AGameplayState::BeginPlay()
 {
 	Super::BeginPlay();
-	GetWorld()->SpawnActor<ASpawnDirector>(SpawnDirectorClass);
+	auto *World = GetWorld();
+	World->SpawnActor<ASpawnDirector>(SpawnDirectorClass);
+	auto *SceneDirector = World->SpawnActor<ASceneDirector>(SceneDirectorClass);
+	SceneDirector->PopulateWorld();
 }
 
 void AGameplayState::Tick(const float DeltaSeconds)
