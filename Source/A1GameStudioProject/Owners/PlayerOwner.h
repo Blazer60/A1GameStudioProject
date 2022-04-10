@@ -14,6 +14,7 @@ class A1GAMESTUDIOPROJECT_API UPlayerOwner
 {
 	GENERATED_BODY()
 public:
+	UPlayerOwner();
 	virtual void OnKill(const FVector& Location, const int Money) override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=ItemOwner)

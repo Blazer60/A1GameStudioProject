@@ -13,17 +13,30 @@
 UItemOwner::UItemOwner()
 {
 	PrimaryComponentTick.bCanEverTick = true;
+	
+	MaxHealth			= CreateDefaultSubobject<UStat>("Max Health");
+	Speed				= CreateDefaultSubobject<UStat>("Speed");
+	JumpHeight			= CreateDefaultSubobject<UStat>("Jump Height");
+	DamageMultiplier	= CreateDefaultSubobject<UStat>("Damage Multiplier");
 }
 
-UItemComponent* UItemOwner::AddItem(TSubclassOf<UItemComponent> ItemClass)
+UItemComponent* UItemOwner::AddItem(const TSubclassOf<UItemComponent> ItemClass, const int32 Quantity)
 {
 	auto *const Actor = GetOwner();
+	
+	auto *const FoundItem = Cast<UItemComponent>(Actor->FindComponentByClass(ItemClass));
+	if (FoundItem)
+	{
+		FoundItem->Increase(Quantity);
+		return FoundItem;
+	}
+	
 	auto *const Item = NewObject<UItemComponent>(Actor, ItemClass);
-
 	if (Item)
 	{
 		Actor->AddOwnedComponent(Item);
 		Item->RegisterComponent();
+		Item->Attach(Quantity);
 	}
 	
 	return Item;

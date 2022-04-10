@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "A1GameStudioProject/Common.h"
 #include "UObject/Object.h"
 #include "Details.generated.h"
 
@@ -13,10 +14,10 @@ class A1GAMESTUDIOPROJECT_API UDetails
 {
 	GENERATED_BODY()
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=AI)
 	int32 Cost		{ 10 };
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=AI)
 	float MoneyBack { 0.2f };
 };
 
@@ -26,10 +27,10 @@ class UEnemyDetails
 {
 	GENERATED_BODY()
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Details)
 	TSubclassOf<AActor> ToSpawn;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Spawning)
 	int32 GroupSize { 1 };
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Spawning)
@@ -49,9 +50,16 @@ class UItemDetails
 {
 	GENERATED_BODY()
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TSubclassOf<class UItemComponent> ToSpawn;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Details)
+	TSubclassOf<class UItemComponent> ItemComponent;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Chests)
+	TSubclassOf<class AWorldItem> WorldItem;
+
+	/** The amount given to an AI who receives this item. One is only ever spawned from chests. */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=AI)
 	int32 Quantity { 1 };
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Chests)
+	TEnumAsByte<ERarity> Rarity { Common };
 };
