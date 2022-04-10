@@ -40,6 +40,9 @@ public:
 	
 	virtual void OnKill(const FVector &Location, const int Money);
 
+	UFUNCTION(BlueprintCallable, Category=Stats)
+	void LevelUp(int32 NewLevel);
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Stats)
 	float Health			{ 100.f };
 	
@@ -55,11 +58,11 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Instanced, Category=Stats)
 	UStat *DamageMultiplier;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    int32 Level { 0 };
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Stats)
+    int32 Level { 1 };
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 BaseReward { 100 };
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Stats)
+	int32 RewardCredits { 100 };
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<AProjectile> ProjectileType;
@@ -77,6 +80,7 @@ public:
 	UKillCallback* KillCallback { nullptr };
 
 protected:
+	void ResetBase() const;
 	virtual void BeginPlay() override;
 	
 	void Warn(const FString &Item) const;

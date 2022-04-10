@@ -67,11 +67,28 @@ void UItemOwner::OnKill(const FVector& Location, const int Money)
 		KillCallback->Broadcast(Location, Money);
 }
 
-void UItemOwner::SpawnProjectile(TSubclassOf<AProjectile> Class, const FTransform& Transform)
+void UItemOwner::LevelUp(const int32 NewLevel)
+{
+	Level = NewLevel;
+	Health = MaxHealth->IncreaseBase(Level);
+	Speed->IncreaseBase(Level);
+	JumpHeight->IncreaseBase(Level);
+	DamageMultiplier->IncreaseBase(Level);
+}
+
+void UItemOwner::SpawnProjectile(const TSubclassOf<AProjectile> Class, const FTransform& Transform)
 {
 	auto *Projectile = Cast<AProjectile>(UGameplayStatics::BeginDeferredActorSpawnFromClass(this, Class, Transform));
 	Projectile->SetupProjectile(GetOwner(), this);
 	UGameplayStatics::FinishSpawningActor(Projectile, Transform);
+}
+
+void UItemOwner::ResetBase() const
+{
+	MaxHealth->OriginalBase			= MaxHealth->Base;
+	Speed->OriginalBase				= Speed->Base;
+	JumpHeight->OriginalBase		= JumpHeight->Base;
+	DamageMultiplier->OriginalBase	= DamageMultiplier->Base;
 }
 
 void UItemOwner::BeginPlay()
@@ -87,6 +104,9 @@ void UItemOwner::BeginPlay()
 		Warn("Hurt Callback");
 	if (!KillCallback)
 		Warn("Kill Callback");
+
+	ResetBase();
+	LevelUp(Level);
 }
 
 void UItemOwner::Warn(const FString &Item) const

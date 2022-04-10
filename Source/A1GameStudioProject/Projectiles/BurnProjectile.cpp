@@ -76,7 +76,7 @@ void ABurnProjectile::BurnTick()
         ItemOwner->OnHit(OtherOwner, ProcRate, Damage, Location);
         if (OtherOwner->Health <= 0)
         {
-        	ItemOwner->OnKill(Location, OtherOwner->BaseReward);
+        	ItemOwner->OnKill(Location, OtherOwner->RewardCredits);
         }
         
         OnHit(OtherOwner, Location);

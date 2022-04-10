@@ -27,7 +27,16 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Stats)
 	float Multiplier { 0.f };
 
+	/** The rate at which base should increase based on the level? Base' = StackRate * Base */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Stats)
+	float StackRate { 1.f };
+
 	/** Gets the total amount of this stat based on all of its properties */
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category=Stats)
 	float Total() const;
+
+	UFUNCTION(BlueprintCallable, Category=Leveling)
+	float IncreaseBase(int32 Level);
+
+	float OriginalBase { Base };
 };

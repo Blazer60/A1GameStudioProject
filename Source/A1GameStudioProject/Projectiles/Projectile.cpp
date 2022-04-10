@@ -69,7 +69,7 @@ void AProjectile::OnOverlapDelegate(
 			ItemOwner->OnHit(OtherOwner, ProcRate, Damage, SweepResult.Location);
 			OnHit(OtherOwner, SweepResult.Location);
             if (OtherOwner->Health <= 0)
-            	ItemOwner->OnKill(SweepResult.Location, OtherOwner->BaseReward);
+            	ItemOwner->OnKill(SweepResult.Location, OtherOwner->RewardCredits);
 		}
 	}
 }

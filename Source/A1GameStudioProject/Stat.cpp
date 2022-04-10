@@ -4,11 +4,17 @@
 #include "Stat.h"
 
 UStat::UStat(const float B)
-	: Base(B) 
+	: Base(B), OriginalBase(B)
 {
 }
 
 float UStat::Total() const
 {
 	return Base + Additional + Multiplier * (Base + Additional);
+}
+
+float UStat::IncreaseBase(const int32 Level)
+{
+	Base = OriginalBase * StackRate * static_cast<float>(Level);
+	return Base;
 }
