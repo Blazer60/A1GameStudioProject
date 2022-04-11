@@ -15,6 +15,6 @@ float UStat::Total() const
 
 float UStat::IncreaseBase(const int32 Level)
 {
-	Base = OriginalBase * StackRate * static_cast<float>(Level);
+	Base = OriginalBase + OriginalBase * StackRate * static_cast<float>(Level - 1);
 	return Base;
 }

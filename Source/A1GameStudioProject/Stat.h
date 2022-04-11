@@ -27,7 +27,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Stats)
 	float Multiplier { 0.f };
 
-	/** The rate at which base should increase based on the level? Base' = StackRate * Base */
+	/** The rate at which base should increase based on the level? Base' = Base + StackRate * Base */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Stats)
 	float StackRate { 1.f };
 
