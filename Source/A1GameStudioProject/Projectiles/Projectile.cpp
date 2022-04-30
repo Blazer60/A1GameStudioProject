@@ -8,13 +8,13 @@
 
 AProjectile::AProjectile()
 {
-	PrimaryActorTick.bCanEverTick = true;
 	SphereComponent = CreateDefaultSubobject<USphereComponent>("Sphere Collision");
 
 	// The projectile movement component needs a collision object at root. So we force it here.
 	RootComponent = SphereComponent;
-	
+
 	SphereComponent->OnComponentBeginOverlap.AddDynamic(this, &AProjectile::OnOverlapDelegate);
+	PrimaryActorTick.bCanEverTick = true;
 }
 
 AProjectile::AProjectile(AActor* NewActorOwner, UItemOwner* ItemOwnerComponent)

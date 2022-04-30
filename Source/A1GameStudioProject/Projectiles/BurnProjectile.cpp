@@ -72,8 +72,8 @@ void ABurnProjectile::BurnTick()
 		}
         		
         OtherOwner->OnHurt(ItemOwner, Damage);
-		
-        ItemOwner->OnHit(OtherOwner, ProcRate, Damage, Location);
+		if (ItemOwner)
+			ItemOwner->OnHit(OtherOwner, ProcRate, Damage, Location);
         if (OtherOwner->Health <= 0)
         {
         	ItemOwner->OnKill(Location, OtherOwner->RewardCredits);
@@ -85,6 +85,8 @@ void ABurnProjectile::BurnTick()
 
 void ABurnProjectile::BeginPlay()
 {
+	Super::BeginPlay();
+	PrimaryActorTick.bCanEverTick = true;
 	// Hit Delegates must always be attached at runtime.
 	SphereComponent->OnComponentBeginOverlap.AddDynamic(this, &ABurnProjectile::BeginOverlapProxy);
     SphereComponent->OnComponentEndOverlap.AddDynamic(this, &ABurnProjectile::EndOverlap);
