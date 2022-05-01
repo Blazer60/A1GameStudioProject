@@ -16,6 +16,8 @@ class A1GAMESTUDIOPROJECT_API UPlayerOwner
 public:
 	UPlayerOwner();
 	virtual void OnKill(const FVector& Location, const int Money) override;
+	
+	virtual void OnHurt(UItemOwner* By, float Damage) override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=ItemOwner)
 	int32 Credits { 0 };

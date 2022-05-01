@@ -36,7 +36,7 @@ public:
 	void OnHit(UItemOwner *Target, float ProcRate, float Damage, FVector HitLocation) const;
 
 	UFUNCTION(BlueprintCallable, Category=Callbacks)
-	void OnHurt(UItemOwner *By, float Damage);
+	virtual void OnHurt(UItemOwner *By, float Damage);
 	
 	virtual void OnKill(const FVector &Location, const int Money);
 
